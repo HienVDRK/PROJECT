@@ -6,22 +6,12 @@ import { HttpClient } from '@angular/common/http';
 })
 export class IssueService {
 
-  ROOT_URI = '';
+  ROOT_URI = 'http://localhost:4000';
 
   constructor(private http: HttpClient) { }
 
   getIssues() {
-    // return this.http.get(`${this.ROOT_URI}/issues`);
-    return [
-      {
-        id: 123,
-        title: "My first issue",
-        responsible: "responsible",
-        description: "description",
-        severity: "severity",
-        status: "Open",
-      }
-    ]
+    return this.http.get(`${this.ROOT_URI}/issues`);
   }
   getIssueById(id) {
     return this.http.get(`${this.ROOT_URI}/issues/${id}`);

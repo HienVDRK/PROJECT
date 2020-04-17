@@ -13,8 +13,7 @@ import { MatSnackBar } from '@angular/material';
 export class ListComponent implements OnInit {
 
 
-  // issues: Issue[];
-  issues;
+  issues: Issue[];
   displayedColumns = ['title', 'responsible', 'severity', 'status', 'actions'];
 
   constructor(private issueService: IssueService, private snackBar: MatSnackBar, private router: Router) { }
@@ -24,11 +23,9 @@ export class ListComponent implements OnInit {
   }
 
   fetchIssues() {
-    this.issues = this.issueService.getIssues()
-    // this.issueService.getIssues().subscribe((response: Issue[]) => {
-    //   this.issues = response;
-    //   console.log('response---', response);
-    // })
+    this.issueService.getIssues().subscribe((response: Issue[]) => {
+      this.issues = response;
+    })
   }
   editIssue(id) {
     this.router.navigate([`/edit/${id}`])
