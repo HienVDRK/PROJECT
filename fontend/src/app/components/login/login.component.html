@@ -1,0 +1,23 @@
+<div class="login-wrapper">
+
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title class="title-box">Form Log in</mat-card-title>
+    </mat-card-header>
+
+    <form [formGroup]="loginForm" class="example-form">
+      <mat-card-content>
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="Username" formControlName="username" #username required>
+        </mat-form-field>
+        <br/>
+        <mat-form-field class="example-full-width">
+          <input type="password" matInput placeholder="Password" formControlName="password" #password required>
+        </mat-form-field>
+
+      </mat-card-content>
+      <button type="submit" mat-stroked-button color="primary" (click)="login(username.value, password.value)"  [disabled]="loginForm.pristine || loginForm.invalid" class="btn-block">Log in</button>
+    </form>
+  </mat-card>
+
+</div>

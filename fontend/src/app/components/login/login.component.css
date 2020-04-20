@@ -1,0 +1,12 @@
+.login-wrapper{
+  height: 100%;
+  width: 30%;
+  margin-top: 10%;
+  margin-left: 35%
+}
+.title-box{
+  margin-left: 150px
+}
+.login-wrapper .example-full-width,.login-wrapper .btn-block{
+  width:100%
+}
