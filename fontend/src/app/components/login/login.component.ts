@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
+import { IssueService } from '../../issue.service';
 
 @Component({
   selector: 'app-login',
@@ -10,11 +11,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  accounts = [
-    { username: "admin", password: "123456" },
-    { username: "normal", password: "123456" }
-  ]
-  constructor(private formBuilder: FormBuilder, private router: Router) {
+  constructor(private issueService: IssueService, private formBuilder: FormBuilder, private router: Router) {
 
     this.loginForm = this.formBuilder.group({
       username: ["", [Validators.required]],
@@ -27,13 +24,21 @@ export class LoginComponent implements OnInit {
   }
 
   login(username, password) {
-    if(this.accounts.some(account => account.username === username &&  account.password === password)){
-      this.router.navigate([`/list`]);
-  } else{
-      alert("login không thành công");
-  }
-    // console.log(this.accounts)
-    // console.log('username', username);
-    // console.log('password', password);
+    this.issueService.login(username, password).subscribe((respone: any) => {
+      if (respone.status == 200) {
+        this.router.navigate([`/list`]);
+      }
+      else if (respone.message === "User not found") {
+        alert(respone.message)
+      }
+      else if (respone.message === "Incorrect password") {
+        alert(respone.message)
+      }
+      else {
+        alert(respone.message)
+      }
+    }), err =>{
+      console.log(err);
+    }
   }
 }

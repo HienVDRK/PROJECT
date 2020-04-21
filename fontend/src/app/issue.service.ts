@@ -10,6 +10,14 @@ export class IssueService {
 
   constructor(private http: HttpClient) { }
 
+  login(username, password) {
+    const account ={
+      username: username,
+      password: password
+    }
+    return this.http.post(`${this.ROOT_URI}/users/login`, account);
+  }
+
   getIssues() {
     return this.http.get(`${this.ROOT_URI}/issues`);
   }

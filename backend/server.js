@@ -2,11 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 import Issue from './models/Issue';
+import User from './models/User';
 
 const app = express();
 const router = express.Router();
+const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -19,36 +23,69 @@ connection.once('open', () => {
     console.log('MongoDB database connection established successfully!');
 });
 
-router.route('/issues').get((req, res) => {
+const accessTokenSecret = 'youraccesstokensecret';
+
+const authenticateJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwt.verify(token, accessTokenSecret, (err, user) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+
+            req.user = user;
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+
+router.get('/issues', getIssue);
+router.get('/issues/:id', getIssueById);
+router.post('/issues/add', addIssue);
+router.post('/issues/update/:id', updateIssue);
+router.get('/issues/delete/:id', deleteIssue);
+// router.get('/issues/delete/:id', authenticateJWT, deleteIssue);
+router.post('/users/signup', signup);
+router.post('/users/login', login);
+
+
+function getIssue(req, res) {
     Issue.find((err, issues) => {
         if (err)
             console.log(err);
         else
             res.json(issues);
     });
-});
+}
 
-router.route('/issues/:id').get((req, res) => {
+
+function getIssueById(req, res) {
     Issue.findById(req.params.id, (err, issue) => {
         if (err)
             console.log(err);
         else
             res.json(issue);
     });
-});
+}
 
-router.route('/issues/add').post((req, res) => {
+
+function addIssue(req, res) {
     let issue = new Issue(req.body);
     issue.save()
         .then(issue => {
-            res.status(200).json({'issue': 'Added successfully'});
+            res.status(200).json({ 'issue': 'Added successfully' });
         })
         .catch(err => {
             res.status(400).send('Failed to create new record');
         });
-});
+}
 
-router.route('/issues/update/:id').post((req, res) => {
+
+function updateIssue(req, res) {
     Issue.findById(req.params.id, (err, issue) => {
         if (!issue)
             return next(new Error('Could not load document'));
@@ -65,18 +102,63 @@ router.route('/issues/update/:id').post((req, res) => {
                 res.status(400).send('Update failed');
             });
         }
-    });
-});
+    })
+}
 
-router.route('/issues/delete/:id').get((req, res) => {
-    Issue.findByIdAndRemove({_id: req.params.id}, (err, issue) => {
+
+function deleteIssue(req, res) {
+    Issue.findByIdAndRemove({ _id: req.params.id }, (err, issue) => {
         if (err)
             res.json(err);
         else
             res.json('Remove successfully');
     })
-})
+}
+
+// -------------------------------------
+
+
+function signup(req, res, next) {
+    let user = new User(req.body);
+    bcrypt.hash(user.password, 10, function (err, hash) {
+        if (err) {
+            return next(err);
+        }
+        user.password = hash;
+        user.save()
+            .then(user => {
+                res.status(200).json({ 'user': 'Signup successfully' });
+            })
+            .catch(err => {
+                res.status(400).send('Failed to create new record');
+            });
+    })
+}
+
+function login(req, res) {
+    let user = new User(req.body)
+    let username = user.username
+    let password = user.password
+
+    User.findOne({ username: username })
+        .exec(function (err, userinDb) {
+            if (err) {
+                res.json({message: err})
+                return
+            } else if (!userinDb) {
+                res.json({message : 'User not found'})
+                return
+            }
+            bcrypt.compare(password, userinDb.password, function (err, result) {
+                if (result === true) {
+                    const accessToken = jwt.sign({ username: user.username }, accessTokenSecret);
+                    res.json({ status: 200, userinDb, accessToken });
+                } else {
+                    res.json({message : 'Incorrect password'})
+                }
+            })
+        });
+}
 
 app.use('/', router);
-
-app.listen(4000, () => console.log('Express server running on port 4000'));
+app.listen(port, () => console.log('Express server running on port ' + port));
