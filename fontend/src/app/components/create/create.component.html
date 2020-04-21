@@ -18,7 +18,7 @@
         <textarea matInput placeholder="Description" formControlName="description" #description></textarea>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field class="field-full-width">
         <mat-select placeholder="Severity" formControlName="severity" #severity>
           <mat-option value="Low">Low</mat-option>
           <mat-option value="Medium">Medium</mat-option>
@@ -26,7 +26,7 @@
         </mat-select>
       </mat-form-field>
       <mat-divider></mat-divider>
-      <br /><br/>
+      <br /><br />
       <button type="submit" mat-raised-button (click)="addIssue(title.value, responsible.value, description.value, severity.value)" color="primary"
       [disabled]="createForm.pristine || createForm.invalid">Save</button>&nbsp;
       <button mat-raised-button color="accent" routerLink="/list">Back</button>

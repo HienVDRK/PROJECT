@@ -9,10 +9,10 @@ import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   { path: 'list', component: ListComponent },
-  { path: '', redirectTo: 'list', pathMatch: 'full' },
   { path: 'create', component: CreateComponent  },
   { path: 'edit/:id', component: EditComponent },
   { path: 'login', component: LoginComponent},
+  { path: '', redirectTo: 'list', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent}
 ];
 
