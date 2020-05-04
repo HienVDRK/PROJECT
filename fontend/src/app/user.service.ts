@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class UserService {
 
   // ROOT_URI = 'https://myapp-backend-hienvd.herokuapp.com';
-  //ROOT_URI = 'http://localhost:4000';
+  ROOT_URI = 'http://localhost:4000';
 
   auth: any;
   headers: any;
