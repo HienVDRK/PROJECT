@@ -13,9 +13,11 @@ import { Issue } from '../../issue.model'
 export class EditComponent implements OnInit {
 
   id: String;
-  issue: any = {}
-  updateForm: FormGroup
-
+  selectedStatus: String;
+  selectedSeverity: String;
+  issue: any = {};
+  updateForm: FormGroup;
+  auth = JSON.parse(localStorage.getItem('auth')) || '';
   constructor(private issueService: IssueService, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
     this.updateForm = this.formBuilder.group({
       title: ["", Validators.required],
@@ -28,6 +30,10 @@ export class EditComponent implements OnInit {
 
 
   ngOnInit() {
+    if (this.auth == '') {
+      this.router.navigate(['/login']);
+    }
+
     this.route.params.subscribe(params => {
       this.id = params.id;
       this.issueService.getIssueById(this.id).subscribe(respone => {
@@ -42,11 +48,24 @@ export class EditComponent implements OnInit {
   }
 
   updateIssue(title, responsible, description, severity, status) {
-    console.log('severity', severity);
-    this.issueService.updateIssues(this.id, title, responsible, description, severity, status).subscribe(() => {
-      this.snackBar.open('Issue updated successfully', 'OK', {
-        duration: 3000
-      })
-    })
+    const objIssue = {
+      title: title,
+      responsible: responsible,
+      description: description,
+      severity: severity,
+      status: status
+    }
+    this.issueService.updateIssues(this.id, objIssue).subscribe((respone: any) => {
+      if (respone.status == 200) {
+        this.snackBar.open(respone.message, 'OK', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'end'
+        })
+        this.router.navigate(['/list']);
+      }
+    }), err => {
+      console.log('err updateIssue --', err);
+    }
   }
 }

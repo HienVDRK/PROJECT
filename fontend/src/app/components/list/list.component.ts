@@ -14,26 +14,59 @@ export class ListComponent implements OnInit {
 
 
   issues: Issue[];
-  displayedColumns = ['title', 'responsible', 'severity', 'status', 'actions'];
-
-  constructor(private issueService: IssueService, private snackBar: MatSnackBar, private router: Router) { }
+  displayedColumns = ['title', 'responsible', 'description', 'severity', 'status', 'actions'];
+  auth = JSON.parse(localStorage.getItem('auth')) || '';
+  constructor(private issueService: IssueService, private snackBar: MatSnackBar, private router: Router) {
+  }
 
   ngOnInit() {
-    this.fetchIssues()
+    if (this.auth == '') {
+      this.router.navigate(['/login']);
+    }
+    this.getIssues()
   }
 
-  fetchIssues() {
+  getIssues() {
     this.issueService.getIssues().subscribe((response: Issue[]) => {
       this.issues = response;
-    })
+    }), err => {
+      console.log('err getIssues --', err)
+    }
   }
   editIssue(id) {
-    this.router.navigate([`/edit/${id}`])
+    if (this.auth.role == 'admin') {
+      this.router.navigate([`/edit/${id}`])
+    } else {
+      this.snackBar.open("Not allow permission.", 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+        horizontalPosition: 'end'
+      })
+    }
   }
 
   deleteIssue(id) {
-    this.issueService.deleteIssue(id).subscribe(() => {
-      this.fetchIssues()
-    })
+    if (this.auth.role == 'admin') {
+      if (confirm("Are you sure you want delete?")) {
+        this.issueService.deleteIssue(id).subscribe((respone: any) => {
+          if (respone.status == 200) {
+            this.snackBar.open(respone.message, 'OK', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'end'
+            })
+            this.getIssues()
+          }
+        }), err => {
+          console.log('err delete --', err)
+        }
+      }
+    } else {
+      this.snackBar.open("Not allow permission.", 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+        horizontalPosition: 'end'
+      })
+    }
   }
 }

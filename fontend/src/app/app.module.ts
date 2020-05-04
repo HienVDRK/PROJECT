@@ -14,11 +14,15 @@ import {
   MatToolbarModule, MatFormFieldModule,
   MatInputModule, MatOptionModule, MatSelectModule,
   MatIconModule, MatButtonModule, MatCardModule,
-  MatTableModule, MatDividerModule, MatSnackBarModule
+  MatTableModule, MatDividerModule, MatSnackBarModule, MatSidenavModule
 } from '@angular/material';
 import { IssueService } from './issue.service';
 import { LoginComponent } from './components/login/login.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { ListUserComponent } from './components/list-user/list-user.component';
+import { SignupComponent } from './components/signup/signup.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { ResendComponent } from './components/resend/resend.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +31,11 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     CreateComponent,
     EditComponent,
     LoginComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    ListUserComponent,
+    SignupComponent,
+    EditUserComponent,
+    ResendComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +54,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     MatCardModule,
     MatTableModule,
     MatDividerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSidenavModule
   ],
   providers: [IssueService],
   bootstrap: [AppComponent]

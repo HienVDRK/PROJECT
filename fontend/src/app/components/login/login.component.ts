@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
-import { IssueService } from '../../issue.service';
-
+import { UserService } from '../../user.service';
+import { MatSnackBar } from '@angular/material';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,33 +11,41 @@ import { IssueService } from '../../issue.service';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  constructor(private issueService: IssueService, private formBuilder: FormBuilder, private router: Router) {
-
+  constructor(private userService: UserService, private snackBar: MatSnackBar, private formBuilder: FormBuilder, private router: Router) {
     this.loginForm = this.formBuilder.group({
-      username: ["", [Validators.required]],
+      email: ["", [Validators.required]],
       password: ["", [Validators.required, Validators.minLength(6)]],
     })
-
   }
 
   ngOnInit() {
   }
 
-  login(username, password) {
-    this.issueService.login(username, password).subscribe((respone: any) => {
+  login(email, password) {
+    this.userService.login(email, password).subscribe((respone: any) => {
       if (respone.status == 200) {
-        this.router.navigate([`/list`]);
+        localStorage.setItem('auth', JSON.stringify({
+          'accessToken': respone.accessToken,
+          'email': respone.userDb.email,
+          'id': respone.userDb._id,
+          'role': respone.userDb.role
+        }))
+        this.router.navigate([`/list`])
       }
-      else if (respone.message === "User not found") {
-        alert(respone.message)
+      else if (respone.status == 400 || respone.status == 401 || respone.status == 403) {
+        this.snackBar.open(respone.message, 'OK', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'end'
+        })
+      } else {
+        this.snackBar.open("Something went wrong", 'OK', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'end'
+        })
       }
-      else if (respone.message === "Incorrect password") {
-        alert(respone.message)
-      }
-      else {
-        alert(respone.message)
-      }
-    }), err =>{
+    }), err => {
       console.log(err);
     }
   }

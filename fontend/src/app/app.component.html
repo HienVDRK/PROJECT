@@ -1,7 +1,19 @@
-
 <mat-toolbar>
-  <span>Angular 7 - Using MEAN stack (MongoDB, Express, Angular, Nodejs)</span>
+  <mat-toolbar-row>
+    <span>Angular 7 - Using MEAN stack (MongoDB, Express, Angular, Nodejs)</span>
+  </mat-toolbar-row>
 </mat-toolbar>
-<div>
-  <router-outlet></router-outlet>
+<div style="height: 93%;">
+  <mat-drawer-container class="example-container">
+    <mat-drawer #drawer>
+      <a mat-tab-link routerLink="/list">Issues list</a> <br />
+      <a mat-tab-link routerLink="/list-user">Users list</a> <br />
+      <a mat-tab-link routerLink="/signup">Sign up</a> <br />
+      <a mat-tab-link (click)="logout()">Log out</a>
+    </mat-drawer>
+    <mat-drawer-content>
+        <button mat-raised-button (click)="drawer.toggle()">Menu</button>
+      <router-outlet></router-outlet>
+    </mat-drawer-content>
+  </mat-drawer-container>
 </div>

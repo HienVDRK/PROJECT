@@ -1,0 +1,16 @@
+.resend-wrapper{
+  height: 100%;
+  width: 25%;
+  margin-top: 10%;
+  margin-left: 38%
+}
+.title-box{
+  margin-left: 130px
+}
+.resend-wrapper .example-full-width,.resend-wrapper .btn-block{
+  width:100%
+}
+:host{
+  width: 100%;
+}
+

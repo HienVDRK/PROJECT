@@ -4,10 +4,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class IssueService {
+export class UserService {
 
   // ROOT_URI = 'https://myapp-backend-hienvd.herokuapp.com';
-  ROOT_URI = 'http://localhost:4000';
+  //ROOT_URI = 'http://localhost:4000';
 
   auth: any;
   headers: any;
@@ -19,38 +19,59 @@ export class IssueService {
     })
   }
 
-  getIssues() {
-    return this.http.get(`${this.ROOT_URI}/issues`);
+  signup(email, firstname, lastname, password, role) {
+    const account = {
+      email: email,
+      firstname: firstname,
+      lastname: lastname,
+      password: password,
+      role: role
+    }
+    return this.http.post(`${this.ROOT_URI}/users/signup`, account);
   }
 
-  getIssueById(id) {
-    return this.http.get(`${this.ROOT_URI}/issues/${id}`);
+  resend(email) {
+    return this.http.get(`${this.ROOT_URI}/users/resend/${email}`);
   }
 
-  addIssues(objIssue) {
+
+  login(email, password) {
+    const account = {
+      email: email,
+      password: password
+    }
+    return this.http.post(`${this.ROOT_URI}/users/login`, account);
+  }
+
+  getUsers() {
     this.auth = JSON.parse(window.localStorage.getItem('auth')) || '';
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.auth.accessToken}`
     })
-    return this.http.post(`${this.ROOT_URI}/issues/add`, objIssue, { headers: this.headers });
+    return this.http.get(`${this.ROOT_URI}/users`, { headers: this.headers });
   }
 
-  updateIssues(id, objIssue) {
+
+  getUserById(id) {
+    return this.http.get(`${this.ROOT_URI}/users/${id}`);
+  }
+
+  deleteUser(id) {
     this.auth = JSON.parse(window.localStorage.getItem('auth')) || '';
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.auth.accessToken}`
     })
-    return this.http.post(`${this.ROOT_URI}/issues/update/${id}`, objIssue, { headers: this.headers });
+    return this.http.get(`${this.ROOT_URI}/users/delete/${id}`, { headers: this.headers });
   }
 
-  deleteIssue(id) {
+  updateUser(id, objUser){
     this.auth = JSON.parse(window.localStorage.getItem('auth')) || '';
     this.headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.auth.accessToken}`
     })
-    return this.http.get(`${this.ROOT_URI}/issues/delete/${id}`, { headers: this.headers });
+    return this.http.post(`${this.ROOT_URI}/users/update/${id}`, objUser, { headers: this.headers });
   }
 }

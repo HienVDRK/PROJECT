@@ -1,0 +1,32 @@
+<div>
+  <br />
+  <mat-card>
+    <section class="mat-typography">
+      <h3>Update User</h3>
+    </section>
+    <mat-divider></mat-divider><br />
+    <form [formGroup]="updateFormUser" class="edit-form">
+
+      <mat-form-field class="field-full-width">
+        <input matInput placeholder="Firstname" formControlName="firstname" #firstname>
+      </mat-form-field>
+
+      <mat-form-field class="field-full-width">
+        <input matInput placeholder="Lastname" formControlName="lastname" #lastname>
+      </mat-form-field>
+
+      <mat-form-field class="field-full-width">
+        <mat-select placeholder="Role" formControlName="role" [(ngModel)]="selectedRole">
+          <mat-option value="admin">admin</mat-option>
+          <mat-option value="user">user</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+      <br /><br/>
+      <button type="submit" mat-raised-button (click)="updateUser(firstname.value, lastname.value, selectedRole)" color="primary"
+      [disabled]="updateFormUser.pristine || updateFormUser.invalid">Save</button>&nbsp;
+      <button mat-raised-button color="accent" routerLink="/list-user">Back</button>
+    </form>
+  </mat-card>
+</div>

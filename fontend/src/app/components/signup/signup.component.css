@@ -1,0 +1,16 @@
+.signup-wrapper{
+  height: 100%;
+  width: 25%;
+  margin-top: 6%;
+  margin-left: 38%
+}
+.title-box{
+  margin-left: 130px
+}
+.signup-wrapper .example-full-width,.signup-wrapper .btn-block{
+  width:100%
+}
+:host{
+  width: 100%;
+}
+

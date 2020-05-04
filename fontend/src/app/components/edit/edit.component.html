@@ -19,7 +19,7 @@
       </mat-form-field>
 
       <mat-form-field class="field-full-width">
-        <mat-select placeholder="Severity" formControlName="severity" #severity>
+        <mat-select placeholder="Severity" formControlName="severity" [(ngModel)]="selectedSeverity">
           <mat-option value="Low">Low</mat-option>
           <mat-option value="Medium">Medium</mat-option>
           <mat-option value="High">High</mat-option>
@@ -27,7 +27,7 @@
       </mat-form-field>
 
       <mat-form-field class="field-full-width">
-        <mat-select placeholder="Status" formControlName="status" #status>
+        <mat-select placeholder="Status" formControlName="status" [(ngModel)]="selectedStatus">
           <mat-option value="Open">Open</mat-option>
           <mat-option value="In Progress">In Progress</mat-option>
           <mat-option value="Done">Done</mat-option>
@@ -35,7 +35,7 @@
       </mat-form-field>
       <mat-divider></mat-divider>
       <br /><br/>
-      <button type="submit" mat-raised-button (click)="updateIssue(title.value, responsible.value, description.value, severity.value, status.value)" color="primary"
+      <button type="submit" mat-raised-button (click)="updateIssue(title.value, responsible.value, description.value, selectedSeverity, selectedStatus)" color="primary"
       [disabled]="updateForm.pristine || updateForm.invalid">Save</button>&nbsp;
       <button mat-raised-button color="accent" routerLink="/list">Back</button>
     </form>

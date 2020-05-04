@@ -1,0 +1,19 @@
+<div class="resend-wrapper">
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title class="title-box">Form Resend</mat-card-title>
+    </mat-card-header>
+
+    <form [formGroup]="resendForm" class="example-form">
+      <mat-card-content>
+        <mat-form-field class="example-full-width">
+          <input type="email" matInput placeholder="Email" formControlName="email" #email required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+        </mat-form-field>
+        <br />
+      </mat-card-content>
+      <button type="submit" mat-stroked-button color="primary"
+        (click)="resend(email.value)"
+        [disabled]="resendForm.pristine || resendForm.invalid" class="btn-block">Resend</button>
+    </form>
+  </mat-card>
+</div>

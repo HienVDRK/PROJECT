@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material';
 export class CreateComponent implements OnInit {
 
   createForm: FormGroup;
-
+  auth = JSON.parse(localStorage.getItem('auth')) || '';
   constructor(private issueService: IssueService, private router: Router, private snackBar: MatSnackBar, private formBuilder: FormBuilder) {
     this.createForm = this.formBuilder.group({
       title: ["", Validators.required],
@@ -23,11 +23,29 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.auth == '') {
+      this.router.navigate(['/login']);
+    }
   }
 
   addIssue(title, responsible, description, severity) {
-    this.issueService.addIssues(title, responsible, description, severity).subscribe(() => {
-      this.router.navigate([`/list`]);
-    })
+    const objIssue = {
+      title: title,
+      responsible: responsible,
+      description: description,
+      severity: severity
+    }
+    this.issueService.addIssues(objIssue).subscribe((respone: any) => {
+      if (respone.status == 200) {
+        this.snackBar.open(respone.message, 'OK', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'end'
+        })
+        this.router.navigate([`/list`])
+      }
+    }), err => {
+      console.log('err addIssue--', err)
+    }
   }
 }

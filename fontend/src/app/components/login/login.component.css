@@ -1,12 +1,16 @@
 .login-wrapper{
   height: 100%;
-  width: 30%;
-  margin-top: 10%;
-  margin-left: 35%
+  width: 25%;
+  margin-top: 8%;
+  margin-left: 38%
 }
 .title-box{
-  margin-left: 150px
+  margin-left: 140px
 }
 .login-wrapper .example-full-width,.login-wrapper .btn-block{
   width:100%
 }
+:host{
+  width: 100%;
+}
+
